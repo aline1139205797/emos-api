@@ -91,6 +91,11 @@ public class UserController {
         return R.ok().put("list", list);
     }
 
+    /**
+     * 用户登录
+     * @param loginForm 用户登录表单
+     * @return 消息模型（附带token）
+     */
     @PostMapping("/login")
     @Operation(summary = "用户登录接口")
     public R login(@Valid @RequestBody LoginForm loginForm){
@@ -100,7 +105,8 @@ public class UserController {
         if(loginId != null){
             StpUtil.setLoginId(loginId);
             Set<String> permissions = userService.searchUserPermissions(loginId);
-            r.put("permissions",permissions);
+            String token = StpUtil.getTokenInfo().getTokenValue();
+            r.put("permissions",permissions).put("token",token);
         }
         return r;
     }
@@ -123,7 +129,7 @@ public class UserController {
     }
 
     /**
-     * 用户推出登录
+     * 用户退出登录
      * @return 消息模型
      */
     @GetMapping("/logOut")
