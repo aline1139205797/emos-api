@@ -89,9 +89,154 @@
           AND password = HEX(AES_ENCRYPT(#{password}, #{username}))
         LIMIT 1;
     </select>
+    <select id="searchUserByPage" parameterType="HashMap" resultType="java.util.HashMap">
+        SELECT DISTINCT u.id,
+        u.username,
+        u.name,
+        u.sex,
+        u.tel,
+        u.email,
+        u.hiredate,
+        d.dept_name AS deptName,
+        u.status,
+        (SELECT GROUP_CONCAT(role_name SEPARATOR ", ")
+        FROM tb_role
+        WHERE JSON_CONTAINS(u.role, convert(id, CHAR))) AS roles
+        FROM tb_user AS u
+        JOIN tb_role AS r ON json_contains(u.role, convert(r.id, CHAR))
+        LEFT JOIN tb_dept AS d ON u.dept_id = d.id
+        WHERE 1=1
+        <if test="name!=null">
+            AND u.name like "%${name}%"
+        </if>
+        <if test="sex!=null">
+            AND u.sex = #{sex}
+        </if>
+        <if test="role!=null">
+            AND r.role_name = #{role}
+        </if>
+        <if test="deptId!=null">
+            AND d.id = #{deptId}
+        </if>
+        <if test="status!=null">
+            AND u.status = #{status}
+        </if>
+        LIMIT #{start},#{pageSize}
+    </select>
+    <select id="searchUserByPageCount" parameterType="HashMap" resultType="long">
+        SELECT COUNT(DISTINCT u.id)
+        FROM tb_user AS u
+        JOIN tb_role AS r ON json_contains(u.role, convert(r.id, CHAR))
+        LEFT JOIN tb_dept AS d ON u.dept_id = d.id
+        WHERE 1=1
+        <if test="name!=null">
+            AND u.name like "%${name}%"
+        </if>
+        <if test="sex!=null">
+            AND u.sex = #{sex}
+        </if>
+        <if test="role!=null">
+            AND r.role_name = #{role}
+        </if>
+        <if test="deptId!=null">
+            AND d.id = #{deptId}
+        </if>
+        <if test="status!=null">
+            AND u.status = #{status}
+        </if>
+    </select>
     <update id="updatePassWord" parameterType="HashMap">
         UPDATE tb_user
-        SET password = HEX(AES_ENCRYPT(#{password},username))
+        SET password = HEX(AES_ENCRYPT(#{password}, username))
         WHERE id = #{userid}
     </update>
+    <update id="updateUser" parameterType="com.example.emos.api.service.db.pojo.TbUser">
+        UPDATE tb_user
+        SET
+        <if test="username!=null and password!=null">
+            username = #{username},
+            password = HEX(AES_ENCRYPT(#{password},#{username})),
+        </if>
+        <if test="openId!=null">
+            open_id = #{openId},
+        </if>
+        <if test="nickname!=null">
+            nickname = #{nickname},
+        </if>
+        <if test="photo!=null">
+            photo = #{photo},
+        </if>
+        <if test="name!=null">
+            name = #{name},
+        </if>
+        <if test="sex!=null">
+            sex = #{sex},
+        </if>
+        <if test="tel!=null">
+            tel = #{tel},
+        </if>
+        <if test="email!=null">
+            email=#{email},
+        </if>
+        <if test="hiredate!=null">
+            hiredate = #{hiredate},
+        </if>
+        <if test="role!=null">
+            role = #{role},
+        </if>
+        <if test="root!=null">
+            root = #{root},
+        </if>
+        <if test="deptId!=null">
+            dept_id = #{deptId},
+        </if>
+        <if test="status!=null">
+            status = #{status},
+        </if>
+        id = id
+        WHERE id = #{id}
+    </update>
+    <insert id="addUser" parameterType="com.example.emos.api.service.db.pojo.TbUser">
+        INSERT INTO tb_user
+        SET
+        <if test="username!=null">
+            username = #{username},
+        </if>
+        <if test="password!=null">
+            password = HEX(AES_ENCRYPT(#{password},#{username})),
+        </if>
+        <if test="openId!=null">
+            open_id = #{openId},
+        </if>
+        <if test="nickname!=null">
+            nickname = #{nickname},
+        </if>
+        <if test="photo!=null">
+            photo = #{photo},
+        </if>
+        <if test="name!=null">
+            name = #{name},
+        </if>
+        <if test="sex!=null">
+            sex = #{sex},
+        </if>
+        <if test="tel!=null">
+            tel = #{tel},
+        </if>
+        <if test="email!=null">
+            email=#{email},
+        </if>
+        <if test="hiredate!=null">
+            hiredate = #{hiredate},
+        </if>
+        role = #{role},
+        <if test="root!=null">
+            root = #{root},
+        </if>
+        <if test="deptId!=null">
+            dept_id = #{deptId},
+        </if>
+        status = #{status},
+        create_time = #{createTime}
+    </insert>
 </mapper>

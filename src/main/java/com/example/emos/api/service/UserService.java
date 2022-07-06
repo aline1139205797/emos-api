@@ -1,5 +1,8 @@
 package com.example.emos.api.service;
 
+import com.example.emos.api.common.util.PageUtils;
+import com.example.emos.api.service.db.pojo.TbUser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -32,4 +35,20 @@ public interface UserService {
      * @return 修改条数
      */
     public int updatePassWord(HashMap param);
+
+    /**
+     * 分页查询用户数据
+     * @param param 条数，页码，用户对象
+     * @return 分页数据
+     */
+    public PageUtils searchUserByPage(HashMap param);
+
+    /**
+     * 新增用户
+     * @param tbUser 用户对象
+     * @return 插入数量
+     */
+    public int addUser(TbUser tbUser);
+
+    public int updateUser(TbUser tbUser);
 }

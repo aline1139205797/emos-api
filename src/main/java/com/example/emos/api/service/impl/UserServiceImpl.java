@@ -7,8 +7,10 @@ import cn.hutool.extra.qrcode.QrConfig;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.example.emos.api.common.util.PageUtils;
 import com.example.emos.api.service.db.dao.TbUserDao;
 import com.example.emos.api.service.UserService;
+import com.example.emos.api.service.db.pojo.TbUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -109,6 +111,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 用户登录
+     *
      * @param param 用户对象
      * @return 用户ID
      */
@@ -119,12 +122,44 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 修改用户密码
+     *
      * @param param 用户对象
      * @return 修改条数
      */
     @Override
     public int updatePassWord(HashMap param) {
         return userDao.updatePassWord(param);
+    }
+
+    /**
+     * 分页查询用户数据
+     *
+     * @param param 条数，页码，用户对象
+     * @return 分页数据
+     */
+    @Override
+    public PageUtils searchUserByPage(HashMap param) {
+        ArrayList<HashMap> pageList = userDao.searchUserByPage(param);
+        long count = userDao.searchUserByPageCount(param);
+        int pageIndex = (Integer) param.get("pageIndex");
+        int pageSize = (Integer) param.get("pageSize");
+        PageUtils pageUtils = new PageUtils(pageList, count, pageIndex, pageSize);
+        return pageUtils;
+    }
+
+    /**
+     * 新增用户
+     * @param tbUser 用户对象
+     * @return 插入数量
+     */
+    @Override
+    public int addUser(TbUser tbUser) {
+        return userDao.addUser(tbUser);
+    }
+
+    @Override
+    public int updateUser(TbUser tbUser) {
+        return userDao.updateUser(tbUser);
     }
 
     private String getOpenId(String code) {
