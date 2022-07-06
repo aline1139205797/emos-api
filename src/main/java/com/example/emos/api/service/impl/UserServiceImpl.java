@@ -157,9 +157,24 @@ public class UserServiceImpl implements UserService {
         return userDao.addUser(tbUser);
     }
 
+    /**
+     * 修改用户
+     * @param tbUser 用户
+     * @return 修改数量
+     */
     @Override
     public int updateUser(TbUser tbUser) {
         return userDao.updateUser(tbUser);
+    }
+
+    /**
+     * 批量删除用户
+     * @param ids ID数组
+     * @return 删除数量
+     */
+    @Override
+    public int deleteUsers(Integer[] ids) {
+        return userDao.deleteUsers(ids);
     }
 
     private String getOpenId(String code) {

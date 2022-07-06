@@ -4,6 +4,8 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.temp.SaTempUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.json.JSONUtil;
 import com.example.emos.api.common.util.PageUtils;
 import com.example.emos.api.common.util.R;
@@ -13,6 +15,7 @@ import com.example.emos.api.service.db.pojo.TbUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -183,6 +186,27 @@ public class UserController {
         TbUser user = JSONUtil.parse(form).toBean(TbUser.class);
         user.setRole(JSONUtil.parseArray(form.getRole()).toString());
         int num = userService.updateUser(user);
+        if (num == 1) {
+            StpUtil.logoutByLoginId(form.getId());
+        }
+        return R.ok().put("num", num);
+    }
+
+    @PostMapping("/delete")
+    @Operation(summary = "批量删除用户")
+    @SaCheckPermission(value = {"ROOT", "USER:DELETE"}, mode = SaMode.OR)
+    public R deleteUsers(@Valid @RequestBody DeleteUserByIdsForm form) {
+        Integer loginId = StpUtil.getLoginIdAsInt();
+        if (ArrayUtil.contains(form.getIds(), loginId)) {
+            return R.error("您不能删除自己的用户");
+        }
+        int num = userService.deleteUsers(form.getIds());
+        //离线被删除的用户
+        if (num > 0) {
+            for (Integer id : form.getIds()) {
+                StpUtil.logoutByLoginId(id);
+            }
+        }
         return R.ok().put("num", num);
     }
 }

@@ -50,5 +50,17 @@ public interface UserService {
      */
     public int addUser(TbUser tbUser);
 
+    /**
+     * 修改用户
+     * @param tbUser 用户
+     * @return 修改数量
+     */
     public int updateUser(TbUser tbUser);
+
+    /**
+     * 批量删除用户
+     * @param ids ID数组
+     * @return 删除数量
+     */
+    public int deleteUsers(Integer[] ids);
 }

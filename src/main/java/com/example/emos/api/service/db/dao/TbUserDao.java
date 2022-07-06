@@ -67,4 +67,11 @@ public interface TbUserDao {
      */
     public int updateUser(TbUser user);
 
+    /**
+     * 批量删除用户
+     * @param ids ID数组
+     * @return 删除数量
+     */
+    public int deleteUsers(Integer[] ids);
+
 }
