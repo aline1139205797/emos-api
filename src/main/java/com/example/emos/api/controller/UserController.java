@@ -4,18 +4,16 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.temp.SaTempUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.json.JSONUtil;
 import com.example.emos.api.common.util.PageUtils;
 import com.example.emos.api.common.util.R;
-import com.example.emos.api.controller.form.*;
 import com.example.emos.api.service.UserService;
+import com.example.emos.api.service.db.dao.form.*;
 import com.example.emos.api.service.db.pojo.TbUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -148,6 +146,11 @@ public class UserController {
         return R.ok();
     }
 
+    /**
+     * 分页查询用户数据
+     * @param form 查询用户分页记录表单
+     * @return 分页数据
+     */
     @PostMapping("/getUserPage")
     @Operation(summary = "用户数据分页查询")
     @SaCheckPermission(value = {"ROOT", "USER:SELECT"}, mode = SaMode.OR)
@@ -179,6 +182,11 @@ public class UserController {
         return R.ok().put("num", num);
     }
 
+    /**
+     * 修改用户
+     * @param form 修改用户信息表单
+     * @return 修改数量
+     */
     @PostMapping("/updateUser")
     @Operation(summary = "修改用户")
     @SaCheckPermission(value = {"ROOT", "USER:UPDATE"}, mode = SaMode.OR)
@@ -192,6 +200,11 @@ public class UserController {
         return R.ok().put("num", num);
     }
 
+    /**
+     * 批量删除用户
+     * @param form 用户删除表单
+     * @return 删除数量
+     */
     @PostMapping("/delete")
     @Operation(summary = "批量删除用户")
     @SaCheckPermission(value = {"ROOT", "USER:DELETE"}, mode = SaMode.OR)

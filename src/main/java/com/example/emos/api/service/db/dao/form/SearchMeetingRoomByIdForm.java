@@ -1,4 +1,4 @@
-package com.example.emos.api.controller.form;
+package com.example.emos.api.service.db.dao.form;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

@@ -3,7 +3,7 @@ package com.example.emos.api.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
 import com.example.emos.api.common.util.R;
-import com.example.emos.api.controller.form.SearchDeptByIdForm;
+import com.example.emos.api.service.db.dao.form.SearchDeptByIdForm;
 import com.example.emos.api.service.DeptService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
