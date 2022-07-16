@@ -24,7 +24,7 @@ public interface RoleService {
      * @param ids ID集合
      * @return 操作条数
      */
-    public int deleteRolesByIds(Integer[] ids) throws Exception;
+    public int deleteRolesByIds(Integer[] ids);
 
     /**
      * 添加角色数据

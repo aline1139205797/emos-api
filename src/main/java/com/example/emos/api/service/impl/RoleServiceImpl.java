@@ -1,6 +1,7 @@
 package com.example.emos.api.service.impl;
 
 import com.example.emos.api.common.util.PageUtils;
+import com.example.emos.api.exception.EmosException;
 import com.example.emos.api.service.db.dao.TbRoleDao;
 import com.example.emos.api.service.RoleService;
 import com.example.emos.api.service.db.pojo.TbRole;
@@ -43,9 +44,9 @@ public class RoleServiceImpl implements RoleService {
      * @return 操作条数
      */
     @Override
-    public int deleteRolesByIds(Integer[] ids) throws Exception {
+    public int deleteRolesByIds(Integer[] ids){
         if (!roleDao.searchCanDelete(ids)) {
-            throw new Exception("无法删除关联角色的用户");
+            throw new EmosException("无法删除关联角色的用户");
         }
         int rows = roleDao.deleteByIds(ids);
         return rows;

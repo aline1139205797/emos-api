@@ -16,4 +16,62 @@
         FROM tb_dept
         WHERE id = #{id}
     </select>
+    <select id="searchDeptByPage" parameterType="HashMap" resultType="HashMap">
+        SELECT d.id,
+        d.dept_name AS deptName,
+        d.tel,
+        d.email,
+        d.`desc`,
+        (SELECT COUNT(u.id) FROM tb_user u where u.dept_id = d.id AND u.status = 1) AS emps
+        FROM tb_dept d
+        WHERE 1=1
+        <if test="deptName != null">
+            AND d.dept_name like '%${deptName}%'
+        </if>
+        LIMIT #{start},#{pageSize}
+    </select>
+    <select id="searchDeptCount" parameterType="HashMap" resultType="long">
+        SELECT count(id)
+        FROM tb_dept
+        WHERE 1=1
+        <if test="deptName != null">
+            AND dept_name like '%${deptName}%'
+        </if>
+    </select>
+    <insert id="insert" parameterType="com.example.emos.api.service.db.pojo.TbDept">
+        INSERT INTO tb_dept
+        SET dept_name = #{deptName}
+        <if test="tel != null">
+            ,tel = #{tel}
+        </if>
+        <if test="email != null">
+            ,email = #{email}
+        </if>
+        <if test="desc != null">
+            ,`desc` = #{desc}
+        </if>
+    </insert>
+    <update id="update" parameterType="com.example.emos.api.service.db.pojo.TbDept">
+        UPDATE tb_dept
+        SET dept_name = #{deptName}
+          , tel       = #{tel}
+          , email     = #{email}
+          , `desc`    = #{desc}
+        WHERE id = #{id}
+    </update>
+    <select id="searchCanDelete" resultType="java.lang.Boolean">
+        SELECT (IF(SUM(uNum.idNum) > 0,FALSE,TRUE)) AS result FROM (
+        SELECT COUNT(u.id) AS idNum FROM tb_user u WHERE u.dept_id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ) AS uNum
+    </select>
+    <delete id="delete">
+        DELETE FROM tb_dept
+        WHERE id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

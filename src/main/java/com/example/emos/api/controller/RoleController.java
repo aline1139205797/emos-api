@@ -66,7 +66,7 @@ public class RoleController {
     @PostMapping("/deleteRolesByIds")
     @Operation(summary = "批量删除角色")
     @SaCheckPermission(value = {"ROOT", "ROLE:DELETE"}, mode = SaMode.OR)
-    public R deleteRolesByIds(@Valid @RequestBody DeleteRoleByIdsForm form) throws Exception {
+    public R deleteRolesByIds(@Valid @RequestBody DeleteRoleByIdsForm form){
         int rows = roleService.deleteRolesByIds(form.getIds());
         return R.ok().put("rows", rows);
     }
