@@ -74,4 +74,12 @@ public interface TbUserDao {
      */
     public int deleteUsers(Integer[] ids);
 
+    /**
+     * 查询用户角色名称
+     *
+     * @param userId 用户ID
+     * @return 角色名称
+     */
+    public ArrayList<String> searchUserRoles(int userId);
+
 }

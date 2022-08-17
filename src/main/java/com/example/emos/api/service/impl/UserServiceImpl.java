@@ -149,6 +149,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 新增用户
+     *
      * @param tbUser 用户对象
      * @return 插入数量
      */
@@ -159,6 +160,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 修改用户
+     *
      * @param tbUser 用户
      * @return 修改数量
      */
@@ -169,12 +171,24 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 批量删除用户
+     *
      * @param ids ID数组
      * @return 删除数量
      */
     @Override
     public int deleteUsers(Integer[] ids) {
         return userDao.deleteUsers(ids);
+    }
+
+    /**
+     * 查询用户角色名称
+     *
+     * @param userId 用户ID
+     * @return 角色名称
+     */
+    @Override
+    public ArrayList<String> searchUserRoles(int userId) {
+        return userDao.searchUserRoles(userId);
     }
 
     private String getOpenId(String code) {

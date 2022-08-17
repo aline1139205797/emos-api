@@ -145,6 +145,12 @@
             AND u.status = #{status}
         </if>
     </select>
+    <select id="searchUserRoles" parameterType="int" resultType="java.lang.String">
+        SELECT r.role_name AS roleName
+        FROM tb_user u
+        INNER JOIN tb_role r ON JSON_CONTAINS(u.role, CAST(r.id AS CHAR))
+        WHERE u.id = #{userId}
+    </select>
     <update id="updatePassWord" parameterType="HashMap">
         UPDATE tb_user
         SET password = HEX(AES_ENCRYPT(#{password}, username))

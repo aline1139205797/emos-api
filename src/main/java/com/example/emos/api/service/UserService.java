@@ -10,7 +10,7 @@ import java.util.Set;
 public interface UserService {
     public HashMap createQrCode();
 
-    public boolean checkQrCode(String code,String uuid);
+    public boolean checkQrCode(String code, String uuid);
 
     public HashMap wechatLogin(String uuid);
 
@@ -24,6 +24,7 @@ public interface UserService {
 
     /**
      * 用户登录
+     *
      * @param param 用户对象
      * @return 用户ID
      */
@@ -31,6 +32,7 @@ public interface UserService {
 
     /**
      * 修改用户密码
+     *
      * @param param 用户对象
      * @return 修改条数
      */
@@ -38,6 +40,7 @@ public interface UserService {
 
     /**
      * 分页查询用户数据
+     *
      * @param param 条数，页码，用户对象
      * @return 分页数据
      */
@@ -45,6 +48,7 @@ public interface UserService {
 
     /**
      * 新增用户
+     *
      * @param tbUser 用户对象
      * @return 插入数量
      */
@@ -52,6 +56,7 @@ public interface UserService {
 
     /**
      * 修改用户
+     *
      * @param tbUser 用户
      * @return 修改数量
      */
@@ -59,8 +64,17 @@ public interface UserService {
 
     /**
      * 批量删除用户
+     *
      * @param ids ID数组
      * @return 删除数量
      */
     public int deleteUsers(Integer[] ids);
+
+    /**
+     * 查询用户角色名称
+     *
+     * @param userId 用户ID
+     * @return 角色名称
+     */
+    public ArrayList<String> searchUserRoles(int userId);
 }
