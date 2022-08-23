@@ -13,6 +13,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.example.emos.api.common.util.PageUtils;
 import com.example.emos.api.common.util.R;
+import com.example.emos.api.config.tencent.TrtcUtil;
 import com.example.emos.api.service.MeetingService;
 import com.example.emos.api.service.db.dao.form.*;
 import com.example.emos.api.service.db.pojo.TbMeeting;
@@ -21,10 +22,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -37,7 +36,13 @@ import java.util.HashMap;
 @Slf4j
 public class MeetingController {
     @Autowired
-    MeetingService meetingService;
+    private MeetingService meetingService;
+
+    @Autowired
+    private TrtcUtil trtcUtil;
+
+    @Value("${tencent.trtc.appId}")
+    private int appId;
 
     /**
      * 查询线下会议分页数据
@@ -187,4 +192,33 @@ public class MeetingController {
         PageUtils page = meetingService.searchOnlineMeetingByPage(param);
         return R.ok().put("page", page);
     }
+
+    /**
+     * 获取用户签名
+     *
+     * @return 消息模型
+     */
+    @GetMapping("/searchMyUserSig")
+    @Operation(summary = "获取用户签名")
+    @SaCheckLogin
+    public R searchMyUserSig() {
+        String userId = StpUtil.getLoginIdAsString();
+        String userSig = trtcUtil.genUserSig(userId);
+        return R.ok().put("userSig", userSig).put("userId", userId).put("appId", appId);
+    }
+
+    /**
+     * 查询会议房间RoomId
+     *
+     * @param form 查询在线会议室房间ID表单
+     * @return 消息模型
+     */
+    @PostMapping("/searchRoomIdByUUID")
+    @Operation(summary = "查询会议房间RoomId")
+    @SaCheckLogin
+    public R searchRoomIdByUUID(@Valid @RequestBody SearchRoomIdByUUIDForm form){
+        Long roomId = meetingService.searchRomeIdByUUID(form.getUuid());
+        return R.ok().put("roomId",roomId);
+    }
+
 }

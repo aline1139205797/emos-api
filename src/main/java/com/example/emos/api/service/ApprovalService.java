@@ -20,4 +20,11 @@ public interface ApprovalService {
      * @return 审批详情信息
      */
     public HashMap searchApprovalContent(HashMap param);
+
+    /**
+     * 审批会议申请
+     *
+     * @param param 参数列表
+     */
+    public void approvalTask(HashMap param);
 }

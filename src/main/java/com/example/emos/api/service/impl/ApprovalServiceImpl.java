@@ -37,7 +37,8 @@ public class ApprovalServiceImpl implements ApprovalService {
         param.put("code", code);
         param.put("tcode", tcode);
         String url = workflow + "/workflow/searchTaskByPage";
-        HttpResponse resp = HttpRequest.post(url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(param)).execute();
+        HttpResponse resp = HttpRequest.post(url).header("Content-Type", "application/json")
+                .body(JSONUtil.toJsonStr(param)).execute();
         if (resp.getStatus() == 200) {
             JSONObject json = JSONUtil.parseObj(resp.body());
             JSONObject page = json.getJSONObject("page");
@@ -61,17 +62,36 @@ public class ApprovalServiceImpl implements ApprovalService {
      */
     @Override
     public HashMap searchApprovalContent(HashMap param) {
-        param.put("code",code);
-        param.put("tcode",tcode);
+        param.put("code", code);
+        param.put("tcode", tcode);
         String url = workflow + "/workflow/searchApprovalContent";
-        HttpResponse res = HttpRequest.post(url).header("Content-Type", "application/json").body(JSONUtil.toJsonStr(param)).execute();
-        if(res.getStatus() == 200){
+        HttpResponse res = HttpRequest.post(url).header("Content-Type", "application/json")
+                .body(JSONUtil.toJsonStr(param)).execute();
+        if (res.getStatus() == 200) {
             JSONObject jsonObject = JSONUtil.parseObj(res.body());
-            HashMap content = jsonObject.get("content",HashMap.class);
+            HashMap content = jsonObject.get("content", HashMap.class);
             return content;
-        }else{
+        } else {
             log.error(res.body());
             throw new EmosException("获取工作流数据异常");
+        }
+    }
+
+    /**
+     * 审批会议申请
+     *
+     * @param param 参数列表
+     */
+    @Override
+    public void approvalTask(HashMap param) {
+        param.put("code", code);
+        param.put("tcode", tcode);
+        String url = workflow + "/workflow/approvalTask";
+        HttpResponse resp = HttpRequest.post(url).header("Content-Type", "application/json")
+                .body(JSONUtil.toJsonStr(param)).execute();
+        if (resp.getStatus() != 200) {
+            log.error(resp.body());
+            throw new EmosException("调用工作流审批异常");
         }
     }
 }

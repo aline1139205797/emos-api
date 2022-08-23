@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.json.JSONUtil;
 import com.example.emos.api.common.util.PageUtils;
 import com.example.emos.api.exception.EmosException;
@@ -14,10 +13,10 @@ import com.example.emos.api.service.db.pojo.TbMeeting;
 import com.example.emos.api.task.MeetingWorkflowTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 @Service
@@ -28,6 +27,9 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Autowired
     private MeetingWorkflowTask meetingWorkflowTask;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 查询线下会议分页数据
@@ -63,7 +65,7 @@ public class MeetingServiceImpl implements MeetingService {
         if (row != 1) {
             throw new EmosException("会议添加失败");
         }
-        meetingWorkflowTask.startMeetingWorkflow(meeting.getUuid(), meeting.getCreatorId(), meeting.getTitle(), meeting.getDate(), meeting.getStart() + ":00", meeting.getType().equals("1") ? "线上会议" : "线下会议");
+        meetingWorkflowTask.startMeetingWorkflow(meeting.getUuid(), meeting.getCreatorId(), meeting.getTitle(), meeting.getDate(), meeting.getStart() + ":00", meeting.getType() == 1 ? "线上会议" : "线下会议");
         return row;
     }
 
@@ -147,5 +149,21 @@ public class MeetingServiceImpl implements MeetingService {
         long count = meetingDao.searchOnlineMeetingCount(param);
         PageUtils page = new PageUtils(dataList, count, MapUtil.getInt(param, "page"), MapUtil.getInt(param, "length"));
         return page;
+    }
+
+    /**
+     * 获取roomId
+     *
+     * @param uuid
+     * @return roomId
+     */
+    @Override
+    public Long searchRomeIdByUUID(String uuid) {
+        if (redisTemplate.hasKey(uuid)){
+            Object temp = redisTemplate.opsForValue().get(uuid);
+            Long roomId = Long.parseLong(temp.toString());
+            return roomId;
+        }
+        return null;
     }
 }

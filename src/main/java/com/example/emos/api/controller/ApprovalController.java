@@ -15,6 +15,7 @@ import com.example.emos.api.common.util.R;
 import com.example.emos.api.exception.EmosException;
 import com.example.emos.api.service.ApprovalService;
 import com.example.emos.api.service.UserService;
+import com.example.emos.api.service.db.dao.form.ApprovalTaskForm;
 import com.example.emos.api.service.db.dao.form.SearchApprovalContentForm;
 import com.example.emos.api.service.db.dao.form.SearchTaskByPageForm;
 import io.swagger.v3.oas.annotations.Operation;
@@ -122,6 +123,20 @@ public class ApprovalController {
             log.error(res.body());
             throw new EmosException("获取工作流数据异常");
         }
+    }
 
+    /**
+     * 审批会议申请
+     *
+     * @param form 审批会议申请表单
+     * @return 消息模型
+     */
+    @PostMapping("/approvalTask")
+    @Operation(summary = "审批会议申请")
+    @SaCheckPermission(value = {"WORKFLOW:APPROVAL"})
+    public R approvalTask(@Valid @RequestBody ApprovalTaskForm form){
+        HashMap param = JSONUtil.parse(form).toBean(HashMap.class);
+        approvalService.approvalTask(param);
+        return R.ok();
     }
 }

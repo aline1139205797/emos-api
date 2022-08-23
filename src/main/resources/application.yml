@@ -99,7 +99,7 @@ wx:
 
 emos:
   code: AC7D231706E70191
-  tcode: "471468"
+  tcode: "180578"
   receiveNotify: http://192.168.31.110:8090/emos-api/meeting/recieveNotify
 
 workflow:

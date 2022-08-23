@@ -55,4 +55,6 @@ public interface MeetingService {
      * @return 分页数据
      */
     public PageUtils searchOnlineMeetingByPage(HashMap param);
+
+    public Long searchRomeIdByUUID(String uuid);
 }
