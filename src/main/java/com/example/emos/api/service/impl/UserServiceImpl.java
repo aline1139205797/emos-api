@@ -191,6 +191,17 @@ public class UserServiceImpl implements UserService {
         return userDao.searchUserRoles(userId);
     }
 
+    /**
+     * 查询用户姓名与部门
+     *
+     * @param userId 用户ID
+     * @return 用户姓名与部门
+     */
+    @Override
+    public HashMap searchNameAndDept(int userId) {
+        return userDao.searchNameAndDept(userId);
+    }
+
     private String getOpenId(String code) {
         String url = "https://api.weixin.qq.com/sns/jscode2session";
         HashMap map = new HashMap();

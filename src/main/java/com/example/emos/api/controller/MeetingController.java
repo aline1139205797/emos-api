@@ -17,7 +17,6 @@ import com.example.emos.api.config.tencent.TrtcUtil;
 import com.example.emos.api.service.MeetingService;
 import com.example.emos.api.service.db.dao.form.*;
 import com.example.emos.api.service.db.pojo.TbMeeting;
-import com.example.emos.api.task.MeetingWorkflowTask;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -216,9 +215,46 @@ public class MeetingController {
     @PostMapping("/searchRoomIdByUUID")
     @Operation(summary = "查询会议房间RoomId")
     @SaCheckLogin
-    public R searchRoomIdByUUID(@Valid @RequestBody SearchRoomIdByUUIDForm form){
+    public R searchRoomIdByUUID(@Valid @RequestBody SearchRoomIdByUUIDForm form) {
         Long roomId = meetingService.searchRomeIdByUUID(form.getUuid());
-        return R.ok().put("roomId",roomId);
+        return R.ok().put("roomId", roomId);
+    }
+
+    /**
+     * 查询线上会议人员
+     *
+     * @param form 查询线上会议人员表单
+     * @return 消息模型
+     */
+    @PostMapping("/searchOnlineMeetingMembers")
+    @Operation(summary = "查询线上会议人员")
+    @SaCheckLogin
+    public R searchOnlineMeetingMembers(@Valid @RequestBody SearchOnlineMeetingMembersForm form) {
+        HashMap param = JSONUtil.parse(form).toBean(HashMap.class);
+        param.put("userId", StpUtil.getLoginId());
+        ArrayList<HashMap> list = meetingService.searchOnlineMeetingMembers(param);
+        return R.ok().put("list", list);
+    }
+
+    /**
+     * 会议签到
+     *
+     * @param form 会议签到表单
+     * @return 消息模型
+     */
+    @PostMapping("/UpdateMeetingPresent")
+    @Operation(summary = "会议签到")
+    @SaCheckLogin
+    public R UpdateMeetingPresent(@Valid @RequestBody UpdateMeetingPresentForm form) {
+        HashMap param = new HashMap() {{
+            put("userId", StpUtil.getLoginIdAsInt());
+            put("meetingId", form.getMeetingId());
+        }};
+        if (meetingService.searchCanCheckinMeeting(param)) {
+            int row = meetingService.updateMeetingPresent(param);
+            return R.ok().put("row", row);
+        }
+        return R.ok().put("row", 0);
     }
 
 }

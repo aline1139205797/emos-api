@@ -151,6 +151,13 @@
         INNER JOIN tb_role r ON JSON_CONTAINS(u.role, CAST(r.id AS CHAR))
         WHERE u.id = #{userId}
     </select>
+    <select id="searchNameAndDept"  parameterType="hashmap" resultType="java.util.HashMap">
+        SELECT u.name,
+               d.dept_name AS dept
+        FROM tb_user u
+        LEFT JOIN tb_dept d ON u.dept_id = d.id
+        WHERE u.id = #{userId} AND u.status = 1
+    </select>
     <update id="updatePassWord" parameterType="HashMap">
         UPDATE tb_user
         SET password = HEX(AES_ENCRYPT(#{password}, username))

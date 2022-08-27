@@ -148,6 +148,7 @@ public class UserController {
 
     /**
      * 分页查询用户数据
+     *
      * @param form 查询用户分页记录表单
      * @return 分页数据
      */
@@ -184,6 +185,7 @@ public class UserController {
 
     /**
      * 修改用户
+     *
      * @param form 修改用户信息表单
      * @return 修改数量
      */
@@ -202,6 +204,7 @@ public class UserController {
 
     /**
      * 批量删除用户
+     *
      * @param form 用户删除表单
      * @return 删除数量
      */
@@ -221,5 +224,19 @@ public class UserController {
             }
         }
         return R.ok().put("num", num);
+    }
+
+    /**
+     * 查询用户姓名与部门
+     *
+     * @param form 查询用户姓名和部门表单
+     * @return 用户姓名与部门
+     */
+    @PostMapping("/SearchNameAndDept")
+    @Operation(summary = "获取用户及部门名称")
+    @SaCheckLogin
+    public R SearchNameAndDept(@Valid @RequestBody SearchNameAndDeptForm form) {
+        HashMap result = userService.searchNameAndDept(form.getId());
+        return R.ok(result);
     }
 }

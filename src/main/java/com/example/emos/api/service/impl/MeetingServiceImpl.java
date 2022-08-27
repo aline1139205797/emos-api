@@ -159,11 +159,46 @@ public class MeetingServiceImpl implements MeetingService {
      */
     @Override
     public Long searchRomeIdByUUID(String uuid) {
-        if (redisTemplate.hasKey(uuid)){
+        if (redisTemplate.hasKey(uuid)) {
             Object temp = redisTemplate.opsForValue().get(uuid);
             Long roomId = Long.parseLong(temp.toString());
             return roomId;
         }
         return null;
+    }
+
+    /**
+     * 查询视频墙人员
+     *
+     * @param param 查询参数
+     * @return 参会人员
+     */
+    @Override
+    public ArrayList<HashMap> searchOnlineMeetingMembers(HashMap param) {
+        ArrayList<HashMap> resultList = meetingDao.searchOnlineMeetingMembers(param);
+        return resultList;
+    }
+
+    /**
+     * 查询用户是否可以签到
+     *
+     * @param param 查询参数
+     * @return
+     */
+    @Override
+    public boolean searchCanCheckinMeeting(HashMap param) {
+        long count = meetingDao.searchCanCheckinMeeting(param);
+        return count == 1 ? true : false;
+    }
+
+    /**
+     * 用户签到
+     *
+     * @param param 请求参数
+     * @return 修改条数
+     */
+    @Override
+    public int updateMeetingPresent(HashMap param) {
+        return meetingDao.updateMeetingPresent(param);
     }
 }

@@ -77,4 +77,12 @@ public interface UserService {
      * @return 角色名称
      */
     public ArrayList<String> searchUserRoles(int userId);
+
+    /**
+     * 查询用户姓名与部门
+     *
+     * @param userId 用户ID
+     * @return 用户姓名与部门
+     */
+    public HashMap searchNameAndDept(int userId);
 }

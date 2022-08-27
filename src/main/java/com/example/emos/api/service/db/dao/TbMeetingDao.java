@@ -91,4 +91,28 @@ public interface TbMeetingDao {
      * @return 总条目
      */
     public long searchOnlineMeetingCount(HashMap param);
+
+    /**
+     * 查询视频墙人员
+     *
+     * @param param 查询参数
+     * @return 参会人员
+     */
+    public ArrayList<HashMap> searchOnlineMeetingMembers(HashMap param);
+
+    /**
+     * 查询用户是否可以签到
+     *
+     * @param param 查询参数
+     * @return
+     */
+    public long searchCanCheckinMeeting(HashMap param);
+
+    /**
+     * 用户签到
+     *
+     * @param param 请求参数
+     * @return 修改条数
+     */
+    public int updateMeetingPresent(HashMap param);
 }

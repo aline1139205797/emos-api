@@ -28,12 +28,12 @@ public class InsertMeetingForm {
     private String place;
 
     @NotBlank(message = "start不能为空")
-    @Pattern(regexp = "^([01]?[0-9]|2[0-3]):(00|30)$", message = "start内容不正确")
+    //@Pattern(regexp = "^([01]?[0-9]|2[0-3]):(00|30)$", message = "start内容不正确")
     @Schema(description = "起始时间")
     private String start;
 
     @NotBlank(message = "end不能为空")
-    @Pattern(regexp = "^([01]?[0-9]|2[0-3]):(00|30)$", message = "end内容不正确")
+    //@Pattern(regexp = "^([01]?[0-9]|2[0-3]):(00|30)$", message = "end内容不正确")
     @Schema(description = "结束时间")
     private String end;
 
